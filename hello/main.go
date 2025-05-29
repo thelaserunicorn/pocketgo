@@ -1,20 +1,30 @@
 package main
-import "fmt"
+import (
+  "fmt"
+  "flag"
+)
+
 
 func main() {
-  greeting := greet("fn")
+  var lang string
+  flag.StringVar(&lang, "lang", "en", "choose from language: en, fn, el")
+  flag.Parse()
+  greeting := greet(language(lang))
   fmt.Println(greeting)
 }
 
 type language string
 
+var phrasebook = map[language]string {
+  "el": "Hola",
+  "en": "Hello world",
+  "fn": "Bonjour",
+}
+
 func greet(l language) string {
-  switch l {
-  case "en":
-    return "Hello World"
-  case "fn":
-    return "Bonjour"
-  default:
-    return ""
+  greeting, ok := phrasebook[l]
+  if !ok {
+    return fmt.Sprintf("unsupported language: %q", l)
   }
+  return greeting
 }
